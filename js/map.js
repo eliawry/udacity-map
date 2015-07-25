@@ -1,35 +1,54 @@
-locations = [
-	{'wikipedia': 'https://en.wikipedia.org/wiki/Fukushima_Daiichi_nuclear_disaster'},
-	{'wikipedia': 'https://en.wikipedia.org/wiki/Instituto_Oncologico_Nacional'},
-	{'wikipedia': 'https://en.wikipedia.org/wiki/1996_San_Juan_de_Dios_radiotherapy_accident'},
-	{'wikipedia': 'https://en.wikipedia.org/wiki/1990_Clinic_of_Zaragoza_radiotherapy_accident'},
-	{'wikipedia': 'https://en.wikipedia.org/wiki/Goi%C3%A2nia_accident'},
-	{'wikipedia': 'https://en.wikipedia.org/wiki/Chernobyl_disaster'},
-	{'wikipedia': 'https://en.wikipedia.org/wiki/Bhopal_Gas_Tragedy'},
-	{'wikipedia': 'https://en.wikipedia.org/wiki/Three_Mile_Island_accident'},
-	{'wikipedia': 'https://en.wikipedia.org/wiki/Lucens_reactor'},
-	]
+var locations = [
+  [37.398424, -122.087330],
+  [37.400426, -122.081832],
+  [37.402233, -122.082287],
+  [37.401655, -122.083999],
+  [37.401696, -122.084012],
+  [37.401145, -122.086475],
+  [37.396624, -122.088938],
+  [37.392460, -122.074207]
+  ]
+
+
+
+function Pool(data) {
+    this.latitude = ko.observable(data.latitude);
+    this.longitude = ko.observable(data.longitude);
+}
+
+
+function TaskListViewModel() {
+    // Data
+    var self = this;
+    self.tasks = ko.observableArray([]);
+    self.newTaskText = ko.observable();
+    self.incompleteTasks = ko.computed(function() {
+        return ko.utils.arrayFilter(self.tasks(), function(task) { return !task.isDone() });
+    });
+
+    // Operations
+    self.addTask = function() {
+        self.tasks.push(new Task({ title: this.newTaskText() }));
+        self.newTaskText("");
+    };
+    self.removeTask = function(task) { self.tasks.remove(task) };
+}
 
 function initialize() {
-
-
   var mapProp = {
-    center:new google.maps.LatLng(51.508742,-0.120850),
-    zoom:5,
-    mapTypeId:google.maps.MapTypeId.ROADMAP
+    center:new google.maps.LatLng(37.4038194,-122.081267),
+    zoom:15,
+    mapTypeId:google.maps.MapTypeId.HYBRID
   };
   var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
 
-var current = 0;
-var last = 1;
-var tmp = 0;
-for (var i = 0; i < 30; i ++) {
-   var position = new google.maps.LatLng(current, last);
-   tmp = current;
-   current = current + last;
-   last = tmp;
-   var marker=new google.maps.Marker({position:position});
-   marker.setMap(map);
-}
+locations.forEach(
+  function (location) {
+    location = new google.maps.LatLng(location[0], location[1]);
+    console.log(location)
+    var marker=new google.maps.Marker({position:location});
+    marker.setMap(map);
+  }
+)
 }
 google.maps.event.addDomListener(window, 'load', initialize);
