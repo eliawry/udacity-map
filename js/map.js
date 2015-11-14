@@ -1,38 +1,66 @@
 var locations = [
-  [37.398424, -122.087330],
-  [37.400426, -122.081832],
-  [37.402233, -122.082287],
-  [37.401655, -122.083999],
-  [37.401696, -122.084012],
-  [37.401145, -122.086475],
-  [37.396624, -122.088938],
-  [37.392460, -122.074207]
-  ]
+    {
+        "latitude": 37.398424,
+        "longitude": -122.08733,
+        "poolName": "awesome pool 0"
+    },
+    {
+        "latitude": 37.400426,
+        "longitude": -122.081832,
+        "poolName": "awesome pool 1"
+    },
+    {
+        "latitude": 37.402233,
+        "longitude": -122.082287,
+        "poolName": "awesome pool 2"
+    },
+    {
+        "latitude": 37.401655,
+        "longitude": -122.083999,
+        "poolName": "awesome pool 3"
+    },
+    {
+        "latitude": 37.401696,
+        "longitude": -122.084012,
+        "poolName": "awesome pool 4"
+    },
+    {
+        "latitude": 37.401145,
+        "longitude": -122.086475,
+        "poolName": "awesome pool 5"
+    },
+    {
+        "latitude": 37.396624,
+        "longitude": -122.088938,
+        "poolName": "awesome pool 6"
+    },
+    {
+        "latitude": 37.39246,
+        "longitude": -122.074207,
+        "poolName": "awesome pool 7"
+    }
+]
 
 
 
-function Pool(data) {
-    this.latitude = ko.observable(data.latitude);
-    this.longitude = ko.observable(data.longitude);
-}
-
-
-function TaskListViewModel() {
+var poolViewModel = {
     // Data
-    var self = this;
-    self.tasks = ko.observableArray([]);
-    self.newTaskText = ko.observable();
-    self.incompleteTasks = ko.computed(function() {
-        return ko.utils.arrayFilter(self.tasks(), function(task) { return !task.isDone() });
-    });
+    pools: ko.observableArray(locations),
+    query: ko.observable(''),
 
-    // Operations
-    self.addTask = function() {
-        self.tasks.push(new Task({ title: this.newTaskText() }));
-        self.newTaskText("");
-    };
-    self.removeTask = function(task) { self.tasks.remove(task) };
-}
+  search: function(value) {
+    // remove all the current beers, which removes them from the view
+    poolViewModel.pools.removeAll();
+
+    for(var x in pools) {
+      if(pools[x].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+        poolViewModel.pool.push(pools[x]);
+      }
+    }
+  }
+};
+
+poolViewModel.query.subscribe(poolViewModel.search);
 
 function initialize() {
   var mapProp = {
@@ -44,11 +72,11 @@ function initialize() {
 
 locations.forEach(
   function (location) {
-    location = new google.maps.LatLng(location[0], location[1]);
-    console.log(location)
+    location = new google.maps.LatLng(location.latitude, location.longitude);
     var marker=new google.maps.Marker({position:location});
     marker.setMap(map);
   }
 )
 }
 google.maps.event.addDomListener(window, 'load', initialize);
+ko.applyBindings(poolViewModel);

@@ -1,15 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+<script src="../bower_components/jquery/dist/jquery.min.js"></script>
 <script src="http://maps.googleapis.com/maps/api/js"></script>
-<script src="js/map.js"></script>
+<script src="js/knockout-3.3.0.js" defer="defer"></script>
+<script src="js/map.js" defer="defer"></script>
 <link rel="stylesheet" href="css/map.css">
 
 </head>
 
 <body>
-<div id="googleMap"></div>
+<div id="wrapper">
+
+	<div id="search-wrapper">
+		<header>
+	        <form action="#">
+	            <input placeholder="Search Pools" type="search" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
+	        </form>
+    	</header>
+		<ul data-bind="foreach: pools">
+		    <li>
+		        <p data-bind="text: poolName" />
+		        <div data-bind="text: latitude" />
+		        <strong data-bind="text: longitude" ></strong>
+		    </li>
+		</ul>
+	</div>
+	<div id="googleMap"></div>
+</div>
 </body>
 
 </html>
