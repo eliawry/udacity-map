@@ -1,35 +1,33 @@
 <!DOCTYPE html>
 <html>
-<head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script src="http://maps.googleapis.com/maps/api/js"></script>
-<script src="js/knockout-3.3.0.js" defer="defer"></script>
-<script src="js/map.js" defer="defer"></script>
-<link rel="stylesheet" href="css/map.css">
 
+<head>
+    <title>Pools of Mountain View</title>
+    <link rel="stylesheet" href="css/map.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="js/knockout-3.3.0.js"></script>
+    <script src="http://maps.googleapis.com/maps/api/js?callback=initializeMap" async defer></script>
+    <script src="js/map.js"></script>
 </head>
 
 <body>
-<h1> The Pools of Mountain View </h1>
-<div id="view-toggle">Click to toggle view</div>
-<div id="wrapper">
-
-	<div id="search-wrapper" class="hide-if-small">
-		<header>
-	        <form action="#">
-	            <input placeholder="Search Pools" type="search" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
-	        </form>
-    	</header>
-		<ul class="pool" data-bind="foreach: pools">
-		    <li>
-		        <p data-bind="text: poolName" />
-		        <div data-bind="text: latitude" />
-		        <strong data-bind="text: longitude" ></strong>
-		    </li>
-		</ul>
-	</div>
-	<div id="googleMap"></div>
-</div>
+    <h1> The Pools of Mountain View </h1>
+    <div id="toggle" class="view-toggle">Click to toggle view</div>
+    <div class="wrapper">
+        <div id="search" class="search-wrapper" class="hide-if-small">
+            <header>
+                <form action="#">
+                    <input placeholder="Search Pools" type="search" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
+                </form>
+            </header>
+            <ul class="pool" data-bind="foreach: pools">
+                <li>
+                    <p data-bind="text: poolName"> </p>
+                    <div data-bind="text: latitude"></div>
+                    <strong data-bind="text: longitude"></strong>
+                </li>
+            </ul>
+        </div>
+        <div id="map" class="googleMap"></div>
+    </div>
 </body>
-
-</html>

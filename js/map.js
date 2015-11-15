@@ -33,72 +33,78 @@ var locations = [{
     "poolName": "Wading Pool"
 }];
 
-// Create a new google map
-var mapProp = {
-    center: new google.maps.LatLng(37.4038194, -122.081267),
-    zoom: 15,
-    mapTypeId: google.maps.MapTypeId.HYBRID
-};
-var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
-var markers = [];
+var initializeMap = function() {
+    // Create a new google map
+    var mapProp = {
+        center: new google.maps.LatLng(37.4038194, -122.081267),
+        zoom: 15,
+        mapTypeId: google.maps.MapTypeId.HYBRID
+    };
+    var map = new google.maps.Map(document.getElementById("map"), mapProp);
+    var markers = [];
+    // keep a reference to actice infowindow, if any
+    var currentInfowindow = null;
 
-var addMarker = function(location) {
-    var loc = new google.maps.LatLng(location.latitude, location.longitude);
-    var marker = new google.maps.Marker({
-        position: loc,
-        animation: google.maps.Animation.DROP
-    });
-    // Show the user streetview if available, and link to nearby photos
-    var infowindow = new google.maps.InfoWindow({
-        content: ('<img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location=' + location.latitude + ',' + location.longitude + '"><a href = "https://www.flickr.com/nearby/' + location.latitude + ',' + location.longitude + '">See nearby photos</a>')
-    });
-    marker.addListener('click', function() {
-        infowindow.open(map, marker);
-        // Adopted from https://developers.google.com/maps/documentation/javascript/markers
-        if (marker.getAnimation() !== null) {
-            marker.setAnimation(null);
-        } else {
+    var addMarker = function(location) {
+        var loc = new google.maps.LatLng(location.latitude, location.longitude);
+        var marker = new google.maps.Marker({
+            position: loc,
+            animation: google.maps.Animation.DROP
+        });
+        // Show the user streetview if available, and link to nearby photos
+        infowindow = new google.maps.InfoWindow({
+            content: ('<img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location=' + location.latitude + ',' + location.longitude + '"><a href = "https://www.flickr.com/nearby/' + location.latitude + ',' + location.longitude + '">See nearby photos</a>')
+        });
+        marker.addListener('click', function() {
+            if (currentInfowindow){
+                currentInfowindow.close();
+            };
+            currentInfowindow = infowindow;
+            infowindow.open(map, marker);
             marker.setAnimation(google.maps.Animation.BOUNCE);
-        }
-    });
-    marker.setMap(map);
-    markers.push(marker);
-};
+            window.setTimeout(function() {
+                marker.setAnimation(null);
+              }, 1500);
+        });
+        marker.setMap(map);
+        markers.push(marker);
+    };
 
 
-var viewModel = {
-    // deepcopy locations and store in a pools variable
-    pools: ko.observableArray(locations.slice(0)),
-    query: ko.observable(''),
+    var viewModel = {
+        // deepcopy locations and store in a pools variable
+        pools: ko.observableArray(locations.slice(0)),
+        query: ko.observable(''),
 
-    // on search, look for whatever is typed in the searchbar and update
-    // the map markers
-    search: function(value) {
-        viewModel.pools.removeAll();
-        for (var x in locations) {
-            if (locations[x].poolName.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-                viewModel.pools.push(locations[x]);
-                markers[x].setMap(map);
-            } else {
-                markers[x].setMap(null);
+        // on search, look for whatever is typed in the searchbar and update
+        // the map markers
+        search: function(value) {
+            viewModel.pools.removeAll();
+            for (var x in locations) {
+                if (locations[x].poolName.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+                    viewModel.pools.push(locations[x]);
+                    markers[x].setMap(map);
+                } else {
+                    markers[x].setMap(null);
+                }
             }
         }
+    };
+
+    viewModel.query.subscribe(viewModel.search);
+
+    function initialize() {
+
+        locations.forEach(
+            addMarker
+        );
+        $("#toggle").click(
+            function() {
+                $("#search").toggleClass("hide-if-small");
+                $("#map").toggleClass("hide-if-small");
+            }
+        );
     }
-};
-
-viewModel.query.subscribe(viewModel.search);
-
-function initialize() {
-
-    locations.forEach(
-        addMarker
-    );
-    $("#view-toggle").click(
-        function() {
-            $("#search-wrapper").toggleClass("hide-if-small");
-            $("#googleMap").toggleClass("hide-if-small");
-        }
-    );
+    google.maps.event.addDomListener(window, 'load', initialize);
+    ko.applyBindings(viewModel);
 }
-google.maps.event.addDomListener(window, 'load', initialize);
-ko.applyBindings(viewModel);
