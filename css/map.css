@@ -2,10 +2,8 @@
 
 
 #googleMap {
-  background: tomato;
   width: 70%;
   height: 600px;
-  margin-top: 10px;
 
   font-weight: bold;
   font-size: 3em;
@@ -15,7 +13,6 @@
 #poolList {
   width: 30%;
   height: 600px;
-  margin-top: 10px;
 
   font-weight: bold;
   font-size: 3em;
@@ -44,12 +41,16 @@ li {
 
 ul {
   display: block;
+  padding: 20px;
 }
 
+li:nth-child(even) {background: #CCC}
+li:nth-child(odd) {background: #FFF;
+  color: black;}
+
 #search-wrapper {
-    background: #004050;
-  width: 250px;
-  margin: 100px auto 0 auto;
+  background: #004050;
+  width: 30%;
   color: white;
   /*Some cool shadow and glow effect*/
   box-shadow:

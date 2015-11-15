@@ -18,7 +18,7 @@
 	            <input placeholder="Search Pools" type="search" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
 	        </form>
     	</header>
-		<ul data-bind="foreach: pools">
+		<ul class="pool" data-bind="foreach: pools">
 		    <li>
 		        <p data-bind="text: poolName" />
 		        <div data-bind="text: latitude" />
