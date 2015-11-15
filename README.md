@@ -1,0 +1,1 @@
+To run this application, connect to the the internat and open mapp.html
