@@ -2,35 +2,43 @@
 var locations = [{
     "latitude": 37.398424,
     "longitude": -122.08733,
-    "poolName": "Pool and Hot Tub"
+    "poolName": "Pool and Hot Tub",
+    "poolId": "pool0"
 }, {
     "latitude": 37.400426,
     "longitude": -122.081832,
-    "poolName": "Max's Pool"
+    "poolName": "Max's Pool",
+    "poolId": "pool1"
 }, {
     "latitude": 37.402233,
     "longitude": -122.082287,
-    "poolName": "Hot Tub behind a friend's house"
+    "poolName": "Hot Tub behind a friend's house",
+    "poolId": "pool2"
 }, {
     "latitude": 37.401655,
     "longitude": -122.083999,
-    "poolName": "Hot Tub and Pool"
+    "poolName": "Hot Tub and Pool",
+    "poolId": "pool3"
 }, {
     "latitude": 37.401696,
     "longitude": -122.084012,
-    "poolName": "Public Pool"
+    "poolName": "Public Pool",
+    "poolId": "pool4"
 }, {
     "latitude": 37.401145,
     "longitude": -122.086475,
-    "poolName": "Kiddy Pool"
+    "poolName": "Kiddy Pool",
+    "poolId": "pool5"
 }, {
     "latitude": 37.396624,
     "longitude": -122.088938,
-    "poolName": "Water Slide"
+    "poolName": "Water Slide",
+    "poolId": "pool6"
 }, {
     "latitude": 37.39246,
     "longitude": -122.074207,
-    "poolName": "Wading Pool"
+    "poolName": "Wading Pool",
+    "poolId": "pool7"
 }];
 
 var initializeMap = function() {
@@ -55,7 +63,8 @@ var initializeMap = function() {
         infowindow = new google.maps.InfoWindow({
             content: ('<img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location=' + location.latitude + ',' + location.longitude + '"><a href = "https://www.flickr.com/nearby/' + location.latitude + ',' + location.longitude + '">See nearby photos</a>')
         });
-        marker.addListener('click', function() {
+
+        marker.show = function() {
             if (currentInfowindow){
                 currentInfowindow.close();
             };
@@ -65,7 +74,11 @@ var initializeMap = function() {
             window.setTimeout(function() {
                 marker.setAnimation(null);
               }, 1500);
-        });
+        }
+
+        marker.addListener('click', marker.show);
+        $("#" + loc.poolId).click(marker.show);
+        console.log("#" + loc.poolId)
         marker.setMap(map);
         markers.push(marker);
     };
