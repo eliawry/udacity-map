@@ -77,7 +77,7 @@ var initializeMap = function() {
         }
 
         marker.addListener('click', marker.show);
-        $("#" + loc.poolId).click(marker.show);
+        $("#" + location.poolId).click(marker.show);
         console.log("#" + loc.poolId)
         marker.setMap(map);
         markers.push(marker);
