@@ -43,7 +43,19 @@ var locations = [{
 
 
 var constructContentFromLocation = function(location) {
-    return '<img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location=' + location.latitude + ',' + location.longitude + '"><a href = "https://www.flickr.com/nearby/' + location.latitude + ',' + location.longitude + '">See nearby photos</a>'
+    var lat = location.latitude;
+    var lon = location.longitude;
+    var latLonStr = lat + ',' + lon
+    $.ajax({
+      url : "http://api.wunderground.com/api/85c3f687e2c50808/geolookup/conditions/q/"+latLonStr + ".json",
+      dataType : "jsonp",
+      success : function(parsed_json) {
+      var name = location.poolName;
+      var temp_f = parsed_json['current_observation']["temp_f"];
+      console.log("Current temperature at " + name + " is: " + temp_f + " degrees");
+      }
+      });
+    return '<img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location=' + latLonStr + '"><a href = "https://www.flickr.com/nearby/' + latLonStr + '">See nearby photos</a>'
 }
 
 var initializeMap = function() {
@@ -81,7 +93,6 @@ var initializeMap = function() {
 
         marker.addListener('click', marker.show);
         $("#" + location.poolId).click(marker.show);
-        console.log("#" + loc.poolId)
         marker.setMap(map);
         markers.push(marker);
     };
