@@ -45,20 +45,20 @@ var locations = [{
 var constructContentFromLocation = function(location) {
     var lat = location.latitude;
     var lon = location.longitude;
-    var latLonStr = lat + ',' + lon
+    var latLonStr = lat + ',' + lon;
     $.ajax({
-      url : "http://api.wunderground.com/api/85c3f687e2c50808/geolookup/conditions/q/"+latLonStr + ".json",
-      dataType : "jsonp",
-      success : function(parsed_json) {
-      var name = location.poolName;
-      var temp = parsed_json['current_observation']["temp_f"];
-      var feelslike = parsed_json['current_observation']["feelslike_f"];
-      $("#results").append(
-            "<div>Temperature at " + name + " is: " + temp + " degrees, feels like " + feelslike + " degrees </div>");
-      }
-      });
-    return '<div id="results"><div><img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location=' + latLonStr + '"></div><div><a href = "https://www.flickr.com/nearby/' + latLonStr + '">See nearby photos</a></div></div>'
-}
+        url: "http://api.wunderground.com/api/85c3f687e2c50808/geolookup/conditions/q/" + latLonStr + ".json",
+        dataType: "jsonp",
+        success: function(parsed_json) {
+            var name = location.poolName;
+            var temp = parsed_json.current_observation.temp_f;
+            var feelslike = parsed_json.current_observation.feelslike_f;
+            $("#results").append(
+                "<div>Temperature at " + name + " is: " + temp + " degrees, feels like " + feelslike + " degrees </div>");
+        }
+    });
+    return '<div id="results"><div><img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location=' + latLonStr + '"></div><div><a href = "https://www.flickr.com/nearby/' + latLonStr + '">See nearby photos</a></div></div>';
+};
 
 var initializeMap = function() {
     // Create a new google map
@@ -80,18 +80,19 @@ var initializeMap = function() {
         });
 
         marker.show = function() {
-            if (currentInfowindow){
+            if (currentInfowindow) {
                 currentInfowindow.close();
-            };
+            }
             // Show the user streetview if available, and link to nearby photos
             currentInfowindow = new google.maps.InfoWindow({
-            content: constructContentFromLocation(location)});
+                content: constructContentFromLocation(location)
+            });
             currentInfowindow.open(map, marker);
             marker.setAnimation(google.maps.Animation.BOUNCE);
             window.setTimeout(function() {
                 marker.setAnimation(null);
-              }, 1500);
-        }
+            }, 1500);
+        };
 
         marker.addListener('click', marker.show);
         $("#" + location.poolId).click(marker.show);
@@ -136,4 +137,4 @@ var initializeMap = function() {
     }
     google.maps.event.addDomListener(window, 'load', initialize);
     ko.applyBindings(viewModel);
-}
+};
