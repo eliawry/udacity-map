@@ -60,6 +60,7 @@ var constructContentFromLocation = function(location) {
     return '<div id="results"><div><img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location=' + latLonStr + '"></div><div><a href = "https://www.flickr.com/nearby/' + latLonStr + '">See nearby photos</a></div></div>';
 };
 
+
 var initializeMap = function() {
     // Create a new google map
     var mapProp = {
@@ -71,6 +72,15 @@ var initializeMap = function() {
     var markers = [];
     // keep a reference to actice infowindow, if any
     var currentInfowindow = null;
+
+    var clearMarkers = function() {
+        markers.forEach (
+            function (m) {
+                m.setMap(null);
+            }
+        );
+        markers = [];
+    };
 
     var addMarker = function(location) {
         var loc = new google.maps.LatLng(location.latitude, location.longitude);
@@ -110,12 +120,11 @@ var initializeMap = function() {
         // the map markers
         search: function(value) {
             viewModel.pools.removeAll();
+            clearMarkers();
             for (var x in locations) {
                 if (locations[x].poolName.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
                     viewModel.pools.push(locations[x]);
-                    markers[x].setMap(map);
-                } else {
-                    markers[x].setMap(null);
+                    addMarker(locations[x]);
                 }
             }
         }
