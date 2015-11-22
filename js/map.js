@@ -51,11 +51,13 @@ var constructContentFromLocation = function(location) {
       dataType : "jsonp",
       success : function(parsed_json) {
       var name = location.poolName;
-      var temp_f = parsed_json['current_observation']["temp_f"];
-      console.log("Current temperature at " + name + " is: " + temp_f + " degrees");
+      var temp = parsed_json['current_observation']["temp_f"];
+      var feelslike = parsed_json['current_observation']["feelslike_f"];
+      $("#results").append(
+            "<div>Temperature at " + name + " is: " + temp + " degrees, feels like " + feelslike + " degrees </div>");
       }
       });
-    return '<img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location=' + latLonStr + '"><a href = "https://www.flickr.com/nearby/' + latLonStr + '">See nearby photos</a>'
+    return '<div id="results"><div><img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location=' + latLonStr + '"></div><div><a href = "https://www.flickr.com/nearby/' + latLonStr + '">See nearby photos</a></div></div>'
 }
 
 var initializeMap = function() {
