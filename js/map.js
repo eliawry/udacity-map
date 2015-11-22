@@ -41,6 +41,11 @@ var locations = [{
     "poolId": "pool7"
 }];
 
+
+var constructContentFromLocation = function(location) {
+    return '<img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location=' + location.latitude + ',' + location.longitude + '"><a href = "https://www.flickr.com/nearby/' + location.latitude + ',' + location.longitude + '">See nearby photos</a>'
+}
+
 var initializeMap = function() {
     // Create a new google map
     var mapProp = {
@@ -59,17 +64,15 @@ var initializeMap = function() {
             position: loc,
             animation: google.maps.Animation.DROP
         });
-        // Show the user streetview if available, and link to nearby photos
-        infowindow = new google.maps.InfoWindow({
-            content: ('<img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location=' + location.latitude + ',' + location.longitude + '"><a href = "https://www.flickr.com/nearby/' + location.latitude + ',' + location.longitude + '">See nearby photos</a>')
-        });
 
         marker.show = function() {
             if (currentInfowindow){
                 currentInfowindow.close();
             };
-            currentInfowindow = infowindow;
-            infowindow.open(map, marker);
+            // Show the user streetview if available, and link to nearby photos
+            currentInfowindow = new google.maps.InfoWindow({
+            content: constructContentFromLocation(location)});
+            currentInfowindow.open(map, marker);
             marker.setAnimation(google.maps.Animation.BOUNCE);
             window.setTimeout(function() {
                 marker.setAnimation(null);
